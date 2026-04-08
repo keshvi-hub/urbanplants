@@ -1,0 +1,288 @@
+<!-- Hero Carousel -->
+<section class="hero-carousel">
+  <div class="carousel-track" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+    <div class="carousel-slide slide-clickable" (click)="goToProducts()">
+      <img src="https://www.urbanplant.in/cdn/shop/files/Pot_Planter_2160x750_s_jpg.jpg?v=1762151240&width=1600" alt="Pots & Planters">
+    </div>
+    <div class="carousel-slide slide-clickable" (click)="goToProducts()">
+      <img src="https://www.urbanplant.in/cdn/shop/files/Plants_2160x750_jpg.jpg?v=1762148910&width=1600" alt="Plants">
+    </div>
+    <div class="carousel-slide slide-clickable" (click)="goToProducts()">
+      <img src="https://www.urbanplant.in/cdn/shop/files/PlantCare_tools_2160x750_jpg.jpg?v=1762148909&width=1600" alt="Plant Care">
+    </div>
+    <div class="carousel-slide slide-clickable" (click)="goToProducts()">
+      <img src="https://www.urbanplant.in/cdn/shop/files/Stand_Accocerious_2160x750_jpg.jpg?v=1762148910&width=1600" alt="Stands & Accessories">
+    </div>
+    <div class="carousel-slide slide-clickable" (click)="goToProducts()">
+      <img src="https://www.urbanplant.in/cdn/shop/files/Seeds_2160x750_jpg.jpg?v=1762149235&width=1600" alt="Seeds">
+    </div>
+  </div>
+
+  <!-- Prev / Next -->
+  <button class="carousel-btn carousel-prev" (click)="prevSlide(); $event.stopPropagation()">&#8249;</button>
+  <button class="carousel-btn carousel-next" (click)="nextSlide(); $event.stopPropagation()">&#8250;</button>
+
+  <!-- Dots -->
+  <div class="carousel-dots">
+    <span *ngFor="let s of slides; let i = index"
+      class="dot" [class.active]="i === currentSlide"
+      (click)="goToSlide(i); $event.stopPropagation()"></span>
+  </div>
+</section>
+<app-chatbot/>
+
+ 
+<!-- Category Section -->
+<section class="category-section">
+  <div class="container">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-grid">
+      
+
+      <!-- Individual Categories -->
+      <div 
+        class="category-item" 
+        *ngFor="let c of allCategories"
+        [class.active]="selectedCategory === c._id"
+        (click)="onCategoryClick(c._id)"
+        style="cursor: pointer;">
+        <div class="category-image">
+          <img [src]="'http://localhost:3000/uploads/'+c.cat_pic" [alt]="c.cat_name">
+        </div>
+        <h3>{{c.cat_name}}</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="products-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">
+        {{ selectedCategory ? 'Filtered Products' : 'Trending Plants' }}
+      </h2>
+      <div class="header-actions">
+        <span class="product-count" *ngIf="selectedCategory">
+          {{ featuredProducts.length }} products found
+        </span>
+        <button 
+          *ngIf="selectedCategory" 
+          class="btn-clear-filter"
+          (click)="clearCategoryFilter()">
+          <i class="fas fa-times"></i> Clear Filter
+        </button>
+        <a routerLink="/products" class="view-all-link">View All →</a>
+      </div>
+    </div>
+    
+    <!-- No Products Message -->
+    <div class="no-products" *ngIf="featuredProducts.length === 0">
+      <i class="fas fa-box-open"></i>
+      <h3>No products found in this category</h3>
+      <p>Try selecting a different category</p>
+      <button class="btn-shop-now" (click)="clearCategoryFilter()">View All Products</button>
+    </div>
+
+    <div class="products-grid" *ngIf="featuredProducts.length > 0">
+      <div class="product-card" *ngFor="let product of featuredProducts" [class.out-of-stock-card]="product.stock === 0">
+        <div class="product-badge" *ngIf="product.discount > 0 && (product.stock == null || product.stock > 0)">{{ product.discount }}% OFF</div>
+        <div class="out-of-stock-badge" *ngIf="product.stock != null && product.stock === 0">Out of Stock</div>
+        <div class="product-image">
+          <img [src]="'http://localhost:3000/uploads/'+product.pic1" [alt]="product.name">
+          <div class="product-overlay" *ngIf="product.stock == null || product.stock > 0">
+            <button (click)="openQuickView(product, $event)" class="btn-quick-view">Quick View</button>
+          </div>
+        </div>
+        <div class="product-details">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-description">{{ product.categoryId?.cat_name }}</p>
+          <div class="product-footer">
+            <div class="product-price">
+              <span class="current-price">₹{{ product.price }}</span>
+              <span class="original-price" *ngIf="product.oldprice && product.oldprice > product.price">₹{{ product.oldprice }}</span>
+            </div>
+            <button class="btn-add-to-cart" (click)="addToCart(product._id)" [disabled]="product.stock != null && product.stock === 0" [class.disabled-cart]="product.stock != null && product.stock === 0" [title]="(product.stock != null && product.stock === 0) ? 'Out of Stock' : 'Add to Cart'">
+              <i class="fas fa-shopping-cart"></i>
+            </button>
+            <button class="btn-wishlist-card" (click)="toggleWishlist(product, $event)" [title]="isWishlisted(product._id) ? 'Remove from wishlist' : 'Add to wishlist'">
+              <i [class]="isWishlisted(product._id) ? 'fas fa-heart' : 'far fa-heart'"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="features-section">
+  <div class="container">
+    <h2 class="section-title">Why Choose Urban Plants?</h2>
+    <div class="features-grid">
+      <div class="feature-box">
+        <div class="feature-icon">
+          <i class="fas fa-shipping-fast"></i>
+        </div>
+        <h3>Free Shipping</h3>
+        <p>On orders above ₹499</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">
+          <i class="fas fa-leaf"></i>
+        </div>
+        <h3>100% Organic</h3>
+        <p>Certified organic products</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <h3>Expert Support</h3>
+        <p>Plant care guidance</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">
+          <i class="fas fa-undo"></i>
+        </div>
+        <h3>Easy Returns</h3>
+        <p>7-day return policy</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <p class="testimonial-text">"Amazing quality plants! They arrived in perfect condition and are thriving in my home."</p>
+        <div class="testimonial-author">
+          <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Customer">
+          <div>
+            <h4>Priya Sharma</h4>
+            <span>Mumbai</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <p class="testimonial-text">"Great customer service and healthy plants. Highly recommend Urban Plants!"</p>
+        <div class="testimonial-author">
+          <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Customer">
+          <div>
+            <h4>Rahul Verma</h4>
+            <span>Delhi</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <p class="testimonial-text">"Best place to buy plants online. Fast delivery and excellent packaging."</p>
+        <div class="testimonial-author">
+          <img src="https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Customer">
+          <div>
+            <h4>Anjali Patel</h4>
+            <span>Bangalore</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Quick View Modal -->
+<div class="quick-view-modal" *ngIf="showQuickView" (click)="closeQuickView()">
+  <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="quickViewProduct">
+    <button class="modal-close" (click)="closeQuickView()">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <div class="modal-body">
+      <!-- Image Gallery -->
+      <div class="modal-gallery">
+        <div class="modal-main-image">
+          <img 
+            *ngIf="selectedQuickViewImage"
+            [src]="imageUrl + selectedQuickViewImage" 
+            [alt]="quickViewProduct.name">
+          <div class="no-image" *ngIf="!selectedQuickViewImage">
+            <i class="fas fa-image"></i>
+            <p>No image</p>
+          </div>
+          <div class="modal-badge" *ngIf="quickViewProduct.discount > 0">
+            {{ quickViewProduct.discount }}% OFF
+          </div>
+        </div>
+        
+        <!-- Thumbnails - Only show if more than 1 image -->
+        <div class="modal-thumbnails" *ngIf="quickViewImages.length > 1">
+          <div 
+            *ngFor="let image of quickViewImages"
+            class="modal-thumbnail"
+            [class.active]="selectedQuickViewImage === image"
+            (click)="selectQuickViewImage(image)">
+            <img [src]="imageUrl + image" [alt]="quickViewProduct.name">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Product Info -->
+      <div class="modal-info">
+        <div class="modal-category" *ngIf="quickViewProduct.categoryId">
+          <i class="fas fa-tag"></i> {{ quickViewProduct.categoryId.cat_name }}
+        </div>
+        
+        <h2 class="modal-title">{{ quickViewProduct.name }}</h2>
+        
+        <div class="modal-price">
+          <span class="modal-current-price">₹{{ quickViewProduct.price }}</span>
+          <span class="modal-original-price" *ngIf="quickViewProduct.oldprice && quickViewProduct.oldprice > quickViewProduct.price">
+            ₹{{ quickViewProduct.oldprice }}
+          </span>
+        </div>
+        
+        <div class="modal-savings" *ngIf="quickViewProduct.discount > 0">
+          Save ₹{{ quickViewProduct.oldprice - quickViewProduct.price }} ({{ quickViewProduct.discount }}%)
+        </div>
+        
+        <p class="modal-description">{{ quickViewProduct.description }}</p>
+        
+        <div class="modal-actions">
+          <button class="btn-modal-cart" (click)="addToCart(quickViewProduct._id); closeQuickView()">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+          <a [routerLink]="['/product', quickViewProduct._id]" class="btn-modal-details" (click)="closeQuickView()">
+            View Full Details
+          </a>
+        </div>
+        
+        <div class="modal-image-count">
+          <i class="fas fa-images"></i> {{ quickViewImages.length }} image{{ quickViewImages.length !== 1 ? 's' : '' }} available
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

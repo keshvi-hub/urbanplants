@@ -1,0 +1,101 @@
+<div class="admin-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-seedling"></i>
+      <h2>Products</h2>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/admin/dashboard" class="btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </a>
+      <a routerLink="/admin/products/add" class="btn-add">
+        <i class="fas fa-plus"></i>
+        Add New Product
+      </a>
+    </div>
+  </div>
+
+  <!-- Local Search Box -->
+  <div class="search-section">
+    <div class="local-search-box">
+      <i class="fas fa-search"></i>
+      <input 
+        type="text" 
+        placeholder="Search products by name, description, or category..."
+        [(ngModel)]="searchQuery"
+        (input)="filterProducts()"
+        class="search-input">
+      <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="search-results-info" *ngIf="searchQuery">
+      Found {{ products.length }} product(s) matching "{{ searchQuery }}"
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Discount</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td><strong>{{ p.name }}</strong></td>
+          <td>{{ p.description }}</td>
+          <td>
+            <span class="price-display">₹{{ p.price }}</span>
+            <span class="old-price" *ngIf="p.oldprice">₹{{ p.oldprice }}</span>
+          </td>
+          <td>
+            <span class="discount-badge">{{ p.discount }}% OFF</span>
+          </td>
+          <td>
+            <img *ngIf="p.pic1" [src]="'http://localhost:3000/uploads/' + p.pic1" class="table-image" [alt]="p.name">
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a [routerLink]="['/admin/products/edit', p._id]">
+                <button class="btn-edit">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              </a>
+              <button class="btn-delete" (click)="deleteProduct(p._id)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="products.length === 0 && !searchQuery">
+      <i class="fas fa-seedling"></i>
+      <h3>No Products Yet</h3>
+      <p>Start by adding your first product</p>
+    </div>
+    
+    <!-- No Search Results -->
+    <div class="empty-state" *ngIf="products.length === 0 && searchQuery">
+      <i class="fas fa-search"></i>
+      <h3>No Results Found</h3>
+      <p>No products match "{{ searchQuery }}"</p>
+      <button class="btn-add" (click)="clearSearch()" style="margin-top: 15px;">
+        <i class="fas fa-times"></i> Clear Search
+      </button>
+    </div>
+  </div>
+</div>

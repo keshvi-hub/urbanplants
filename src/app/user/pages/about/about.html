@@ -1,0 +1,139 @@
+<!-- Floating Back -->
+<button class="float-back" (click)="goBack()" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+<!-- Floating Go Top -->
+<button class="go-top" [class.visible]="showGoTop" (click)="scrollTop()" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Hero Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1><i class="fas fa-seedling"></i> About Urban Plants</h1>
+    <p>Growing dreams, nurturing nature — one seed at a time</p>
+  </div>
+</div>
+
+<!-- Story Section -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-grid">
+
+      <!-- Decorative plant illustration block -->
+      <div class="story-visual">
+        <div class="plant-illustration">
+          <div class="plant-circle main-circle">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <div class="plant-circle c2"><i class="fas fa-leaf"></i></div>
+          <div class="plant-circle c3"><i class="fas fa-spa"></i></div>
+          <div class="plant-circle c4"><i class="fas fa-tree"></i></div>
+          <div class="plant-circle c5"><i class="fas fa-apple-alt"></i></div>
+        </div>
+        <div class="years-badge">
+          <span class="years-num">15+</span>
+          <span class="years-label">Years of<br>Excellence</span>
+        </div>
+      </div>
+
+      <div class="story-content">
+        <span class="section-tag">Our Story</span>
+        <h2>From a Small Nursery<br>to a Trusted Brand</h2>
+        <p class="lead">Founded in 2009, Urban Plants started with a simple mission — make quality plants and seeds accessible to everyone.</p>
+        <p>What began as a small family-owned nursery has grown into a trusted source for gardeners across the country. Our passion for plants and commitment to sustainability drives everything we do.</p>
+        <p>We believe everyone deserves access to fresh, healthy plants and high-quality seeds — whether you're a seasoned gardener or just starting out.</p>
+        <div class="story-features">
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Certified Organic Seeds</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Expert Growing Guides</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Sustainable Practices</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>100% Natural Products</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon"><i class="fas {{ stat.icon }}"></i></div>
+        <h3>{{ stat.number }}</h3>
+        <p>{{ stat.label }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="values-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">What We Stand For</span>
+      <h2>Our Core Values</h2>
+      <p>The principles that guide everything we do</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let value of values">
+        <div class="value-icon"><i class="fas {{ value.icon }}"></i></div>
+        <h3>{{ value.title }}</h3>
+        <p>{{ value.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Expertise (replaces team) -->
+<section class="expertise-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Our Expertise</span>
+      <h2>What We Specialise In</h2>
+      <p>Deep knowledge across every aspect of plant care and cultivation</p>
+    </div>
+    <div class="expertise-grid">
+      <div class="expertise-card" *ngFor="let exp of expertise">
+        <div class="exp-icon-wrap">
+          <i class="fas {{ exp.icon }}"></i>
+        </div>
+        <h3>{{ exp.title }}</h3>
+        <p>{{ exp.description }}</p>
+        <div class="exp-tags">
+          <span *ngFor="let tag of exp.tags">{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Process Section -->
+<section class="process-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">How It Works</span>
+      <h2>From Seed to Your Door</h2>
+      <p>Our simple 4-step process ensures you get the best</p>
+    </div>
+    <div class="process-steps">
+      <div class="step" *ngFor="let step of steps; let i = index">
+        <div class="step-num">{{ i + 1 }}</div>
+        <div class="step-icon"><i class="fas {{ step.icon }}"></i></div>
+        <h4>{{ step.title }}</h4>
+        <p>{{ step.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="mission-section">
+  <div class="container">
+    <div class="mission-content">
+      <div class="mission-icon"><i class="fas fa-bullseye"></i></div>
+      <span class="section-tag light">Our Mission</span>
+      <h2>Growing a Greener Tomorrow</h2>
+      <p>To inspire and empower people to grow their own food and create beautiful, sustainable gardens. We're committed to providing the highest quality seeds and plants while promoting environmental stewardship and community building.</p>
+      <a routerLink="/contact" class="cta-btn">
+        <i class="fas fa-envelope"></i> Get In Touch
+      </a>
+    </div>
+  </div>
+</section>

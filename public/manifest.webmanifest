@@ -1,0 +1,17 @@
+{
+  "name": "Urban Plants",
+  "short_name": "UrbanPlants",
+  "description": "Fresh plants, seeds and gardening essentials",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f5f2",
+  "theme_color": "#2e7d32",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

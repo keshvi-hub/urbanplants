@@ -1,0 +1,32 @@
+/* Edit Category specific styles - shared styles in global styles.css */
+
+.current-images {
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.preview-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid #2e7d32;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-text {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e8f5e9;
+}

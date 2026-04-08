@@ -1,0 +1,90 @@
+<div class="admin-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-tags"></i>
+      <h2>Categories</h2>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/admin/dashboard" class="btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </a>
+      <a routerLink="/admin/category/add" class="btn-add">
+        <i class="fas fa-plus"></i>
+        Add New Category
+      </a>
+    </div>
+  </div>
+
+  <!-- Local Search Box -->
+  <div class="search-section">
+    <div class="local-search-box">
+      <i class="fas fa-search"></i>
+      <input 
+        type="text" 
+        placeholder="Search categories by name..."
+        [(ngModel)]="searchQuery"
+        (input)="filterCategories()"
+        class="search-input">
+      <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="search-results-info" *ngIf="searchQuery">
+      Found {{ categories.length }} category(ies) matching "{{ searchQuery }}"
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Category Name</th>
+          <th>Category Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td><strong>{{ category.cat_name }}</strong></td>
+          <td>
+            <img [src]="'http://localhost:3000/uploads/' + category.cat_pic" class="table-image" [alt]="category.cat_name">
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a [routerLink]="['/admin/category/edit', category._id]">
+                <button class="btn-edit">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              </a>
+              <button class="btn-delete" (click)="deleteCategory(category._id)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="categories.length === 0 && !searchQuery">
+      <i class="fas fa-tags"></i>
+      <h3>No Categories Yet</h3>
+      <p>Create your first category to organize products</p>
+    </div>
+    
+    <!-- No Search Results -->
+    <div class="empty-state" *ngIf="categories.length === 0 && searchQuery">
+      <i class="fas fa-search"></i>
+      <h3>No Results Found</h3>
+      <p>No categories match "{{ searchQuery }}"</p>
+      <button class="btn-add" (click)="clearSearch()" style="margin-top: 15px;">
+        <i class="fas fa-times"></i> Clear Search
+      </button>
+    </div>
+  </div>
+</div>

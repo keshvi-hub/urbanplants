@@ -1,0 +1,68 @@
+<div class="admin-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-edit"></i>
+      <h2>Edit Category</h2>
+    </div>
+    <a routerLink="/admin/category" class="btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+      Back
+    </a>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <form [formGroup]="frmGrp" (ngSubmit)="onUpdate()">
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-tag me-2"></i>Category Name
+        </label>
+        <input
+          type="text"
+          formControlName="cat_name"
+          class="form-control"
+          placeholder="Enter category name"
+        />
+        <app-validation-message
+          [control]="frmGrp.get('cat_name')">
+        </app-validation-message>
+      </div>
+
+      <div class="mb-4" *ngIf="oldImage">
+        <label class="form-label">
+          <i class="fas fa-image me-2"></i>Current Image
+        </label>
+        <div class="current-images">
+          <img
+            [src]="'http://localhost:3000/uploads/' + oldImage"
+            class="preview-image"
+            alt="Current category image"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-upload me-2"></i>Change Category Image
+        </label>
+        <input
+          type="file"
+          class="form-control"
+          (change)="onFileChange($event)"
+          accept="image/*"
+        />
+        <small class="form-text text-muted">Upload a new image to replace the current one</small>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/admin/category" class="btn-secondary">
+          <i class="fas fa-times me-2"></i>Cancel
+        </a>
+        <button type="submit" class="btn-add">
+          <i class="fas fa-save me-2"></i>Update Category
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

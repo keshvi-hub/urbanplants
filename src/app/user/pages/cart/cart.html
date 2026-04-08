@@ -1,0 +1,214 @@
+<!-- Floating Back -->
+<button class="float-back" (click)="goBack()" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+<!-- Floating Go Top -->
+<button class="go-top" [class.visible]="showGoTop" (click)="scrollTop()" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Hero Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1><i class="fas fa-shopping-cart"></i> Your Cart</h1>
+    <p>{{ getTotalItems() }} item(s) in your cart</p>
+  </div>
+</div>
+
+<div class="cart-page">
+  <div class="container">
+
+    <!-- Empty Cart -->
+    <div class="empty-cart" *ngIf="cart.length === 0">
+      <div class="empty-icon">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added any plants or seeds yet.</p>
+      <a routerLink="/products" class="btn-shop">
+        <i class="fas fa-seedling"></i> Start Shopping
+      </a>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="cart-layout" *ngIf="cart.length > 0">
+
+      <!-- Left: Cart Items + Address -->
+      <div class="cart-left">
+
+        <!-- Cart Items -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <h3><i class="fas fa-leaf"></i> Cart Items</h3>
+            <span class="item-count">{{ getTotalItems() }} items</span>
+          </div>
+
+          <div class="cart-item" *ngFor="let c of cart" [hidden]="!c.productId">
+            <div class="item-image">
+              <img [src]="'http://localhost:3000/uploads/' + c.productId?.pic1" [alt]="c.productId?.name">
+            </div>
+
+            <div class="item-details">
+              <h4 class="item-name">{{ c.productId?.name }}</h4>
+              <p class="item-category" *ngIf="c.productId?.categoryId?.cat_name">
+                <i class="fas fa-tag"></i> {{ c.productId?.categoryId?.cat_name }}
+              </p>
+              <div class="item-price">
+                <span class="current-price">₹{{ c.productId?.price }}</span>
+                <span class="old-price" *ngIf="c.productId?.oldprice">₹{{ c.productId?.oldprice }}</span>
+                <span class="discount-badge" *ngIf="c.productId?.discount">{{ c.productId?.discount }}% OFF</span>
+              </div>
+            </div>
+
+            <div class="item-actions">
+              <div class="qty-control">
+                <button class="qty-btn" (click)="decrementQuantity(c)">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <span class="qty-value">{{ c.quantity }}</span>
+                <button class="qty-btn" (click)="incrementQuantity(c)">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="item-subtotal">₹{{ (c.productId?.price || 0) * c.quantity }}</div>
+              <button class="remove-btn" (click)="removeItem(c)" title="Remove">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coupon Code -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <h3><i class="fas fa-tag"></i> Coupon Code</h3>
+            <span class="coupon-hint" *ngIf="!couponApplied">Use <strong>URBAN20</strong> for 20% off</span>
+          </div>
+          <div class="coupon-body">
+            <div class="coupon-input-row" *ngIf="!couponApplied">
+              <input
+                type="text"
+                [(ngModel)]="couponCode"
+                placeholder="Enter coupon code"
+                class="coupon-input"
+                (keyup.enter)="applyCoupon()">
+              <button class="btn-apply-coupon" (click)="applyCoupon()">Apply</button>
+            </div>
+            <div class="coupon-error" *ngIf="couponError">
+              <i class="fas fa-times-circle"></i> {{ couponError }}
+            </div>
+            <div class="coupon-success" *ngIf="couponApplied">
+              <i class="fas fa-check-circle"></i> Coupon <strong>URBAN20</strong> applied — 20% discount!
+              <button class="btn-remove-coupon" (click)="removeCoupon()">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+          </div>
+          <div class="form-group">
+            <textarea
+              [(ngModel)]="address"
+              rows="4"
+              placeholder="Enter your full delivery address (house no, street, city, pincode)..."
+              class="address-input">
+            </textarea>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+          </div>
+          <div class="payment-options">
+            <label class="payment-option" [class.selected]="payment_mode === 'Cash On Delivery'">
+              <input type="radio" [(ngModel)]="payment_mode" value="Cash On Delivery">
+              <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
+              <div class="payment-info">
+                <span class="payment-title">Cash on Delivery</span>
+                <span class="payment-desc">Pay when you receive</span>
+              </div>
+            </label>
+            <label class="payment-option" [class.selected]="payment_mode === 'online'">
+              <input type="radio" [(ngModel)]="payment_mode" value="online">
+              <div class="payment-icon"><i class="fas fa-bolt"></i></div>
+              <div class="payment-info">
+                <span class="payment-title">Online Payment</span>
+                <span class="payment-desc">UPI, Card, Net Banking</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="cart-right">
+        <div class="summary-card">
+          <div class="summary-header">
+            <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+          </div>
+
+          <div class="summary-body">
+            <div class="summary-row" *ngFor="let c of cart">
+              <span class="summary-product">{{ c.productId.name }} × {{ c.quantity }}</span>
+              <span>₹{{ c.productId.price * c.quantity }}</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>₹{{ getSubtotal() }}</span>
+            </div>
+            <div class="summary-row discount-row" *ngIf="couponApplied">
+              <span><i class="fas fa-tag"></i> Coupon Discount (20%)</span>
+              <span class="discount-value">- ₹{{ getDiscountAmount() }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span class="free-shipping"><i class="fas fa-truck"></i> Free</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax (GST)</span>
+              <span>₹100</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row total-row">
+              <span>Total</span>
+              <span class="total-amount">₹{{ getTotalAmount() + 100 }}</span>
+            </div>
+          </div>
+
+          <div class="summary-footer">
+            <button class="btn-place-order" (click)="placeorder()">
+              <i class="fas fa-leaf"></i> Place Order
+            </button>
+            <a routerLink="/products" class="btn-continue">
+              <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="trust-badges">
+            <div class="badge-item">
+              <i class="fas fa-shield-alt"></i>
+              <span>Secure Checkout</span>
+            </div>
+            <div class="badge-item">
+              <i class="fas fa-undo"></i>
+              <span>Easy Returns</span>
+            </div>
+            <div class="badge-item">
+              <i class="fas fa-truck"></i>
+              <span>Free Delivery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

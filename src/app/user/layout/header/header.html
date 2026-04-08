@@ -1,0 +1,162 @@
+<header class="site-header">
+  <!-- Coupon Banner (shown when logged in) -->
+  <div class="coupon-banner" *ngIf="isLoggedIn">
+    <i class="fas fa-tag"></i>
+    Use code <strong>URBAN20</strong> for 20% off your order!
+    <button class="btn-copy-coupon" (click)="copyCoupon()" title="Copy code">
+      <i class="fas fa-copy"></i> {{ copied ? 'Copied!' : 'Copy' }}
+    </button>
+  </div>
+  <div class="container">
+    <div class="header-content">
+      <!-- Logo -->
+      <a routerLink="/" class="logo">
+        <img
+          src="https://www.urbanplant.in/cdn/shop/files/URBANPLANT_LOGO_150x@2x.png?v=1735968137"
+          alt="Urban Plant"
+          class="logo-img">
+      </a>
+
+      <!-- Navigation -->
+      <nav class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/products" routerLinkActive="active">Products</a>
+        <a routerLink="/about" routerLinkActive="active">About</a>
+        <a routerLink="/contact" routerLinkActive="active">Contact</a>
+        <a routerLink="/cart" routerLinkActive="active">Cart</a>
+        <a routerLink="/myorder" routerLinkActive="active">Your Orders</a>
+      </nav>
+
+      <!-- Header Icons -->
+      <div class="header-actions">
+        <div class="search-container">
+          <div class="search-icon" (click)="toggleSearch()">
+            <i class="fas fa-search"></i>
+          </div>
+          
+          <!-- Search Box -->
+          <div class="search-box" *ngIf="showSearchBox">
+            <div class="search-input-wrapper">o
+              <i class="fas fa-search"></i>
+              <input 
+                type="text" 
+                [(ngModel)]="searchQuery"
+                (input)="onSearchInput()"
+                placeholder="Search products or categories..."
+                class="search-input"
+                autofocus>
+              <button class="search-close" (click)="closeSearch()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <!-- Search Results Dropdown -->
+            <div class="search-results" *ngIf="searchQuery.length >= 2">
+              <!-- Loading -->
+              <div class="search-loading" *ngIf="isSearching">
+                <i class="fas fa-spinner fa-spin"></i> Searching...
+              </div>
+              
+              <!-- No Results -->
+              <div class="no-results" *ngIf="!isSearching && !hasResults">
+                <i class="fas fa-search"></i>
+                <p>No results found for "{{ searchQuery }}"</p>
+              </div>
+              
+              <!-- Categories Results -->
+              <div class="results-section" *ngIf="searchResults.categories.length > 0">
+                <h4 class="results-title">
+                  <i class="fas fa-folder"></i> Categories
+                </h4>
+                <div 
+                  class="result-item"
+                  *ngFor="let category of searchResults.categories"
+                  (click)="selectCategory(category._id)">
+                  <img 
+                    [src]="'http://localhost:3000/uploads/' + category.cat_pic" 
+                    [alt]="category.cat_name"
+                    class="result-image">
+                  <div class="result-info">
+                    <span class="result-name">{{ category.cat_name }}</span>
+                    <span class="result-type">Category</span>
+                  </div>
+                  <i class="fas fa-arrow-right result-arrow"></i>
+                </div>
+              </div>
+              
+              <!-- Products Results -->
+              <div class="results-section" *ngIf="searchResults.products.length > 0">
+                <h4 class="results-title">
+                  <i class="fas fa-box"></i> Products
+                </h4>
+                <div 
+                  class="result-item"
+                  *ngFor="let product of searchResults.products"
+                  (click)="selectProduct(product._id)">
+                  <img 
+                    [src]="'http://localhost:3000/uploads/' + product.pic1" 
+                    [alt]="product.name"
+                    class="result-image">
+                  <div class="result-info">
+                    <span class="result-name">{{ product.name }}</span>
+                    <span class="result-price">₹{{ product.price }}</span>
+                  </div>
+                  <i class="fas fa-arrow-right result-arrow"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cart-icon" routerLink="/cart" style="cursor:pointer;">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount > 99 ? '99+' : cartCount }}</span>
+        </div>
+
+        <!-- Wishlist icon -->
+        <a routerLink="/wishlist" class="wishlist-icon-btn" title="My Wishlist">
+          <i class="fas fa-heart"></i>
+        </a>
+
+        <!-- Dark mode toggle -->
+
+
+        <!-- Login icon (only when not logged in) -->
+        <a routerLink="/login" class="login-icon-btn" *ngIf="!isLoggedIn" title="Login">
+          <i class="fas fa-sign-in-alt"></i>
+        </a>
+
+        <!-- Name dropdown (only when logged in) -->
+        <div class="user-profile" *ngIf="isLoggedIn" (click)="toggleDropdown()" #userMenu>
+          <div class="avatar">{{ userName.charAt(0).toUpperCase() }}</div>
+          <span>{{ userName }}</span>
+          <i class="fas fa-chevron-down chevron" [class.rotated]="showDropdown"></i>
+
+          <div class="user-dropdown" *ngIf="showDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar">{{ userName.charAt(0).toUpperCase() }}</div>
+              <div>
+                <div class="dropdown-name">{{ userName }}</div>
+                <div class="dropdown-role">Member</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a routerLink="/myorder" class="dropdown-item" (click)="showDropdown=false">
+              <i class="fas fa-box-open"></i> My Orders
+            </a>
+            <a routerLink="/cart" class="dropdown-item" (click)="showDropdown=false">
+              <i class="fas fa-shopping-cart"></i> My Cart
+            </a>
+            <a routerLink="/admin/dashboard" class="dropdown-item admin-link-item" *ngIf="isAdmin" (click)="showDropdown=false">
+              <i class="fas fa-tachometer-alt"></i> Admin Panel
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-item" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

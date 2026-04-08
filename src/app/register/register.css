@@ -1,0 +1,204 @@
+/* Register Page - Centered Modern Design */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: 20px;
+}
+
+.container {
+  max-width: 480px !important;
+  width: 100%;
+}
+
+.register-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(46, 125, 50, 0.2);
+  border: 2px solid #e8f5e9;
+  overflow: hidden;
+  position: relative;
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(76, 175, 80, 0.05) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card-header {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  padding: 30px 20px;
+  border: none;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.brand-tagline {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: 35px 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.form-floating-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4caf50;
+  font-size: 1.1rem;
+  z-index: 2;
+}
+
+.form-control {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px 12px 45px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.form-control:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+  outline: none;
+}
+
+.form-control::placeholder { color: #999; }
+
+.floating-label {
+  position: absolute;
+  left: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  background: white;
+  padding: 0 5px;
+}
+
+.form-control:focus + .floating-label,
+.form-control:not(:placeholder-shown) + .floating-label {
+  top: 0;
+  font-size: 0.75rem;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.password-hint {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: -12px;
+  margin-bottom: 20px;
+  padding-left: 5px;
+}
+
+.password-hint i { color: #4caf50; margin-right: 5px; }
+
+.heritage-stamp {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+  border-radius: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.heritage-stamp span {
+  color: #2e7d32;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.heritage-stamp i { color: #4caf50; }
+
+.btn-register {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 50px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-register:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+}
+
+.footer-note {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #e8f5e9;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.divider-dot { color: #4caf50; margin: 0 8px; }
+
+.footer-note a {
+  color: #4caf50;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer-note a:hover {
+  color: #2e7d32;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .card-body { padding: 25px 20px; }
+  .card-header { padding: 25px 15px; }
+  .brand-name { font-size: 1.75rem; }
+  .heritage-stamp { flex-direction: column; align-items: center; }
+}

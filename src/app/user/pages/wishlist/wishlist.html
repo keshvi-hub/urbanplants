@@ -1,0 +1,85 @@
+<!-- Floating Back -->
+<button class="float-back" (click)="goBack()" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+<!-- Floating Go Top -->
+<button class="go-top" [class.visible]="showGoTop" (click)="scrollTop()" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Hero Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1><i class="fas fa-heart"></i> My Wishlist</h1>
+    <p>Products you love, saved for later</p>
+  </div>
+</div>
+
+<section class="wishlist-section">
+  <div class="container">
+
+    <!-- Header row -->
+    <div class="wishlist-header" *ngIf="items.length > 0">
+      <span class="item-count"><i class="fas fa-heart"></i> {{ items.length }} item{{ items.length !== 1 ? 's' : '' }}</span>
+      <button class="btn-clear-all" (click)="clearWishlist()">
+        <i class="fas fa-trash-alt"></i> Clear All
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-wishlist" *ngIf="items.length === 0">
+      <div class="empty-icon">
+        <i class="far fa-heart"></i>
+      </div>
+      <h2>Your wishlist is empty</h2>
+      <p>Save products you love and come back to them anytime</p>
+      <a routerLink="/products" class="btn-browse">
+        <i class="fas fa-seedling"></i> Browse Products
+      </a>
+    </div>
+
+    <!-- Wishlist Grid -->
+    <div class="wishlist-grid" *ngIf="items.length > 0">
+      <div class="wishlist-card" *ngFor="let product of items">
+        <!-- Remove button -->
+        <button class="btn-remove" (click)="removeFromWishlist(product._id)" title="Remove from wishlist">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Discount badge -->
+        <div class="discount-badge" *ngIf="product.discount > 0">{{ product.discount }}% OFF</div>
+
+        <!-- Product Image -->
+        <a [routerLink]="['/product', product._id]" class="card-image-link">
+          <div class="card-image">
+            <img [src]="imageUrl + product.pic1" [alt]="product.name">
+          </div>
+        </a>
+
+        <!-- Product Info -->
+        <div class="card-body">
+          <p class="card-category">{{ product.categoryId?.cat_name }}</p>
+          <h3 class="card-name">
+            <a [routerLink]="['/product', product._id]">{{ product.name }}</a>
+          </h3>
+          <div class="card-price">
+            <span class="price-current">₹{{ product.price }}</span>
+            <span class="price-old" *ngIf="product.oldprice && product.oldprice > product.price">₹{{ product.oldprice }}</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn-add-cart" (click)="addToCart(product)">
+              <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
+            <a [routerLink]="['/product', product._id]" class="btn-view">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue Shopping -->
+    <div class="continue-shopping" *ngIf="items.length > 0">
+      <a routerLink="/products" class="btn-continue">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+      </a>
+    </div>
+
+  </div>
+</section>

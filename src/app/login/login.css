@@ -1,0 +1,170 @@
+/* Login Page - Centered Modern Design */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: 20px;
+}
+
+.login-simple {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(46, 125, 50, 0.2);
+  border: 2px solid #e8f5e9;
+  max-width: 440px;
+  width: 100%;
+  padding: 40px 35px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-simple::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(76, 175, 80, 0.05) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.login-simple > * {
+  position: relative;
+  z-index: 1;
+}
+
+.farm-icon {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  color: white;
+  font-size: 2.5rem;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+h2 {
+  color: #1b5e20;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.sub-head {
+  color: #66bb6a;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e8f5e9;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  display: block;
+}
+
+.input-group {
+  margin-bottom: 8px;
+}
+
+.input-group-text {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 10px 0 0 10px;
+}
+
+.form-control {
+  border: 2px solid #e0e0e0;
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 15px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+  outline: none;
+}
+
+.btn-farm {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 14px;
+  font-weight: 700;
+  color: white;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  width: 100%;
+}
+
+.btn-farm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+}
+
+.btn-farm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.register-link {
+  color: #4caf50;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-link:hover {
+  color: #2e7d32;
+  text-decoration: underline;
+}
+
+.farm-note {
+  color: #81c784;
+  font-size: 0.9rem;
+  margin-top: 25px;
+  padding-top: 20px;
+}
+
+.text-danger {
+  color: #f44336;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .login-simple {
+    padding: 30px 25px;
+  }
+  h2 {
+    font-size: 1.75rem;
+  }
+}

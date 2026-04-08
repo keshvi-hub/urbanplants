@@ -1,0 +1,31 @@
+<header class="top-header">
+  <div class="header-left">
+    <button class="menu-toggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+    <a routerLink="/" class="header-logo">
+      <img src="https://www.urbanplant.in/cdn/shop/files/URBANPLANT_LOGO_150x@2x.png?v=1735968137"
+           alt="Urban Plant" style="height:40px; width:auto; object-fit:contain;">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <a routerLink="/" class="visit-site" title="Visit Website">
+      <i class="fas fa-external-link-alt"></i>
+      <span>Visit Site</span>
+    </a>
+
+    <div class="notif-btn">
+      <i class="fas fa-bell"></i>
+      <span class="notif-dot"></span>
+    </div>
+
+    <div class="admin-profile">
+      <img src="https://ui-avatars.com/api/?name=Admin&background=2e7d32&color=fff&size=80" alt="admin">
+      <div class="profile-info">
+        <span class="profile-name">{{ adminName }}</span>
+        <span class="profile-role">Administrator</span>
+      </div>
+    </div>
+  </div>
+</header>

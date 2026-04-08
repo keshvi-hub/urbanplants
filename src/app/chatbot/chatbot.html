@@ -1,0 +1,50 @@
+<div class="chatbot-icon" (click)="toggleChat()">
+  <i class="fas fa-comments"></i>
+</div>
+
+<div class="chat-container" *ngIf="isOpen">
+
+  <div class="chat-header">
+    <div class="chat-header-content">
+      <i class="fas fa-leaf"></i>
+      <span>Urban Plants Support</span>
+    </div>
+    <button class="close-btn" (click)="toggleChat()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="chat-body" #chatBody>
+    <div *ngFor="let msg of messages" [class]="msg.sender === 'You' ? 'message user-message' : 'message bot-message'">
+      <div class="message-content">
+        <strong *ngIf="msg.sender === 'Bot'">🌱 Bot:</strong>
+        <strong *ngIf="msg.sender === 'You'">You:</strong>
+        <span [innerHTML]="msg.text.replace(/\n/g, '<br>')"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Replies -->
+  <div class="quick-replies" *ngIf="messages.length === 1">
+    <p class="quick-replies-title">Quick Questions:</p>
+    <button 
+      *ngFor="let reply of quickReplies" 
+      class="quick-reply-btn"
+      (click)="sendQuickReply(reply)">
+      {{ reply }}
+    </button>
+  </div>
+
+  <div class="chat-input">
+    <input 
+      [(ngModel)]="userMessage" 
+      (keyup.enter)="sendMessage()"
+      class="message-input" 
+      placeholder="Ask about plants, seeds..." />
+    <button class="send-btn" (click)="sendMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+
+</div>

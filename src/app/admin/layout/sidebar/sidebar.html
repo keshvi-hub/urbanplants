@@ -1,0 +1,72 @@
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-section">
+      <img src="https://www.urbanplant.in/cdn/shop/files/URBANPLANT_LOGO_150x@2x.png?v=1735968137"
+           alt="Urban Plant" class="sidebar-logo">
+      <p class="sidebar-logo-sub">Admin Panel</p>
+    </div>
+  </div>
+
+  <div class="nav-menu">
+  
+    
+    <div class="nav-item">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard</span>
+      </a>
+    </div>
+
+    
+
+    <div class="nav-item">
+      <a routerLink="/admin/category" routerLinkActive="active">
+        <i class="fas fa-tags"></i>
+        <span>Categories</span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a routerLink="/admin/products" routerLinkActive="active">
+        <i class="fas fa-seedling"></i>
+        <span>Products</span>
+      </a>
+    </div>
+
+    
+
+    <div class="nav-item">
+      <a routerLink="/admin/showuser" routerLinkActive="active">
+        <i class="fas fa-users"></i>
+        <span>Users</span>
+      </a>
+    </div>
+
+    <div class="nav-item">
+      <a routerLink="/admin/orders" routerLinkActive="active">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Orders</span>
+      </a>
+    </div>
+
+    
+
+    <div class="nav-item">
+      <a routerLink="/admin/settings" routerLinkActive="active">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="footer-item logout-item" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </div>
+    <div class="footer-item version-item">
+      <i class="fas fa-info-circle"></i>
+      <span>v1.0.0</span>
+    </div>
+  </div>
+</aside>

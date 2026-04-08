@@ -1,0 +1,52 @@
+<div class="login-simple">
+  <!-- Logo -->
+  <div class="text-center mb-2">
+    <img src="https://www.urbanplant.in/cdn/shop/files/URBANPLANT_LOGO_150x@2x.png?v=1735968137"
+         alt="Urban Plant" style="height:64px; width:auto; object-fit:contain;">
+  </div>
+
+  <!-- Login Form -->
+  <form [formGroup]="loginForm" (ngSubmit)="onsubmit()">
+    <!-- email -->
+    <div class="mb-4">
+      <label class="form-label"><i class="bi bi-envelope me-1" style="color:#557a40;"></i>Email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+        <input type="email" class="form-control" formControlName="email" placeholder="your-email@example.com">
+      </div>
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger small mt-1">
+        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</span>
+      </div>
+    </div>
+
+    <!-- password -->
+    <div class="mb-3">
+      <label class="form-label"><i class="bi bi-lock me-1" style="color:#557a40;"></i>Password</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-key"></i></span>
+        <input type="password" class="form-control" formControlName="password" placeholder="······">
+      </div>
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger small mt-1">
+        <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+      </div>
+    </div>
+
+    <!-- login CTA -->
+    <button type="submit" class="btn btn-farm w-100 mt-4" [disabled]="loading">
+      <i class="bi bi-box-arrow-in-right me-2"></i>
+      {{ loading ? 'Logging in...' : 'log in' }}
+    </button>
+
+    <!-- register callout -->
+    <p class="text-center mt-4 mb-1" style="color:#48633b;">
+      new to urban plants? <a routerLink="/register" class="register-link">join the field</a>
+    </p>
+  </form>
+
+  <!-- small farm quote -->
+  <div class="farm-note text-center border-top border-success border-opacity-25 pt-3 mt-3">
+    <i class="bi bi-wheat"></i> fresh, simple, secure <i class="bi bi-wheat"></i>
+  </div>
+</div>

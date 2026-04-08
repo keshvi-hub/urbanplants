@@ -1,0 +1,79 @@
+<div class="container d-flex justify-content-center align-items-center" style="max-width:520px; z-index:20; min-height:100vh;">
+
+  <div class="card register-card">
+
+    <!-- Header -->
+    <div class="card-header text-center">
+      <img src="https://www.urbanplant.in/cdn/shop/files/URBANPLANT_LOGO_150x@2x.png?v=1735968137"
+           alt="Urban Plant" style="height:60px; width:auto; object-fit:contain; margin-bottom:6px;">
+      
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="frmGrp" (ngSubmit)="onsubmit()">
+
+        <!-- Username -->
+        <div class="form-floating-wrapper">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" class="form-control" id="username" placeholder="Username"
+            autocomplete="username" formControlName="username">
+          <label for="username" class="floating-label">Gardener Name</label>
+          <app-custom-validation [control]="frmGrp.get('username')"></app-custom-validation>
+        </div>
+
+        <!-- Email -->
+        <div class="form-floating-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" class="form-control" id="email" placeholder="Email address"
+            autocomplete="email" formControlName="email">
+          <label for="email" class="floating-label">Email Address</label>
+          <app-custom-validation [control]="frmGrp.get('email')"></app-custom-validation>
+        </div>
+
+        <!-- Mobile -->
+        <div class="form-floating-wrapper">
+          <i class="fas fa-phone input-icon"></i>
+          <input type="tel" class="form-control" id="mobile" placeholder="Mobile number"
+            autocomplete="tel" formControlName="mobileno">
+          <label for="mobile" class="floating-label">Mobile Number</label>
+          <app-custom-validation [control]="frmGrp.get('mobileno')"></app-custom-validation>
+        </div>
+
+        <!-- Password -->
+        <div class="form-floating-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" class="form-control" id="password" placeholder="Password"
+            autocomplete="new-password" formControlName="password">
+          <label for="password" class="floating-label">Password</label>
+          <app-custom-validation [control]="frmGrp.get('password')"></app-custom-validation>
+        </div>
+
+        <div class="password-hint">
+          <i class="fas fa-info-circle"></i>
+          use at least 8 characters for strong protection
+        </div>
+
+        <!-- Nursery Values -->
+        
+        <!-- Register Button -->
+        <button type="submit" class="btn-register">
+          <i class="fas fa-seedling me-2"></i>
+          create garden account
+          <i class="fas fa-seedling ms-2"></i>
+        </button>
+
+        <!-- Login Link -->
+        <div class="footer-note">
+          <span>already a plant lover?</span>
+          <span class="divider-dot">✿</span>
+          <a href="/login">
+            <i class="fas fa-sign-in-alt me-1"></i>login
+          </a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,148 @@
+<!-- Floating Back -->
+<button class="float-back" (click)="goBack()" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+<!-- Floating Go Top -->
+<button class="go-top" [class.visible]="showGoTop" (click)="scrollTop()" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Hero Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1><i class="fas fa-box-open"></i> My Orders</h1>
+    <p>Track and manage all your plant & seed orders</p>
+  </div>
+</div>
+
+<div class="orders-page">
+  <div class="container">
+
+    <!-- Skeleton Loading -->
+    <div class="skeleton-list" *ngIf="loading">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3]">
+        <div class="sk-header">
+          <div class="sk-line w40"></div>
+          <div class="sk-line w20"></div>
+        </div>
+        <div class="sk-body">
+          <div class="sk-img"></div>
+          <div class="sk-lines">
+            <div class="sk-line w60"></div>
+            <div class="sk-line w40"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-orders" *ngIf="!loading && orders.length === 0">
+      <div class="empty-icon">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <h2>No orders yet</h2>
+      <p>You haven't placed any orders. Start growing your garden today!</p>
+      <a routerLink="/products" class="btn-shop">
+        <i class="fas fa-seedling"></i> Shop Now
+      </a>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-list" *ngIf="!loading && orders.length > 0">
+
+      <div class="order-card" *ngFor="let order of orders; let i = index">
+
+        <!-- Order Header -->
+        <div class="order-header">
+          <div class="order-meta">
+            <div class="order-number">
+              <i class="fas fa-hashtag"></i>
+              Order #{{ i + 1 }}
+            </div>
+            <div class="order-date" *ngIf="order.createdAt">
+              <i class="fas fa-calendar-alt"></i>
+              {{ order.createdAt | date: 'dd MMM yyyy' }}
+            </div>
+          </div>
+
+          <div class="order-badges">
+            <span class="payment-badge">
+              <i class="fas fa-credit-card"></i>
+              {{ order.paymentMethod }}
+            </span>
+            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+              <i class="fas" [ngClass]="getStatusIcon(order.status)"></i>
+              {{ order.status || 'Pending' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Order Tracking Stepper -->
+        <div class="tracking-stepper" *ngIf="order.status?.toLowerCase() !== 'cancelled'">
+          <div class="step" [class.active]="getStepIndex(order.status) >= 0" [class.done]="getStepIndex(order.status) > 0">
+            <div class="step-circle"><i class="fas fa-box"></i></div>
+            <div class="step-line"></div>
+            <span>Order Placed</span>
+          </div>
+          <div class="step" [class.active]="getStepIndex(order.status) >= 1" [class.done]="getStepIndex(order.status) > 1">
+            <div class="step-circle"><i class="fas fa-cog"></i></div>
+            <div class="step-line"></div>
+            <span>Processing</span>
+          </div>
+          <div class="step" [class.active]="getStepIndex(order.status) >= 2" [class.done]="getStepIndex(order.status) > 2">
+            <div class="step-circle"><i class="fas fa-truck"></i></div>
+            <div class="step-line"></div>
+            <span>Shipped</span>
+          </div>
+          <div class="step last" [class.active]="getStepIndex(order.status) >= 3">
+            <div class="step-circle"><i class="fas fa-check"></i></div>
+            <span>Delivered</span>
+          </div>
+        </div>
+
+        <!-- Cancelled banner -->
+        <div class="cancelled-banner" *ngIf="order.status?.toLowerCase() === 'cancelled'">
+          <i class="fas fa-times-circle me-2"></i> This order was cancelled
+        </div>
+
+        <!-- Order Items -->
+        <div class="order-items">
+          <div class="order-item" *ngFor="let item of order.items">
+            <div class="item-img">
+              <img [src]="'http://localhost:3000/uploads/' + item.productId?.pic1" [alt]="item.productId?.name">
+            </div>
+            <div class="item-info">
+              <h4>{{ item.productId?.name }}</h4>
+              <p class="item-cat" *ngIf="item.productId?.categoryId?.cat_name">
+                <i class="fas fa-tag"></i> {{ item.productId?.categoryId?.cat_name }}
+              </p>
+            </div>
+            <div class="item-qty">
+              <span class="qty-label">Qty</span>
+              <span class="qty-val">{{ item.quantity }}</span>
+            </div>
+            <div class="item-price">
+              ₹{{ (item.productId?.price || 0) * item.quantity }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Footer -->
+        <div class="order-footer">
+          <div class="delivery-address" *ngIf="order.address">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ order.address }}</span>
+          </div>
+          <div class="footer-right">
+            <div class="order-total">
+              <span>Order Total</span>
+              <strong>₹{{ getOrderTotal(order) }}</strong>
+            </div>
+            <button class="btn-reorder" (click)="reorder(order)" [disabled]="reordering[order._id]">
+              <i class="fas" [ngClass]="reordering[order._id] ? 'fa-spinner fa-spin' : 'fa-redo'"></i>
+              {{ reordering[order._id] ? 'Adding...' : 'Reorder' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

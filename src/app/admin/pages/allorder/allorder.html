@@ -1,0 +1,122 @@
+<div class="admin-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-clipboard-list"></i>
+      <h2>All Orders</h2>
+    </div>
+    <a routerLink="/admin/dashboard" class="btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search by customer name, email or order ID..."
+        [(ngModel)]="searchQuery" (input)="filter()" class="search-input">
+    </div>
+    <select [(ngModel)]="selectedStatus" (change)="filter()" class="status-filter">
+      <option value="">All Statuses</option>
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading orders...
+  </div>
+
+  <!-- Error -->
+  <div class="empty-state" *ngIf="!loading && error">
+    <i class="fas fa-exclamation-circle" style="color:#e53935;"></i>
+    <h3>Error loading orders</h3>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!loading && !error && filtered.length === 0">
+    <i class="fas fa-clipboard-list"></i>
+    <h3>No orders found</h3>
+    <p>{{ orders.length === 0 ? 'No orders have been placed yet.' : 'No orders match your search.' }}</p>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="table-card" *ngIf="!loading && !error && filtered.length > 0">
+    <div class="orders-count">
+      Showing <strong>{{ filtered.length }}</strong> of <strong>{{ orders.length }}</strong> orders
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Address</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of filtered; let i = index">
+
+          <td><span class="order-num">#{{ i + 1 }}</span></td>
+
+          <td>
+            <div class="customer-cell">
+              <div class="customer-avatar">
+                {{ (order.userId?.username || 'U')[0].toUpperCase() }}
+              </div>
+              <div>
+                <div class="customer-name">{{ order.userId?.username || 'Unknown' }}</div>
+                <div class="customer-email">{{ order.userId?.email || '' }}</div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="items-cell">
+              <div class="item-thumb" *ngFor="let item of order.items | slice:0:3">
+                <img [src]="'http://localhost:3000/uploads/' + $any(item).productId?.pic1"
+                     [alt]="$any(item).productId?.name"
+                     [title]="$any(item).productId?.name + ' × ' + $any(item).quantity">
+              </div>
+              <span class="more-items" *ngIf="order.items?.length > 3">
+                +{{ order.items.length - 3 }}
+              </span>
+            </div>
+          </td>
+
+          <td><strong class="total-val">₹{{ getOrderTotal(order) }}</strong></td>
+
+          <td>
+            <span class="payment-chip">
+              <i class="fas" [ngClass]="order.paymentMethod === 'online' ? 'fa-bolt' : 'fa-money-bill-wave'"></i>
+              {{ order.paymentMethod || 'COD' }}
+            </span>
+          </td>
+
+          <td>
+            <span class="address-val">{{ getAddress(order) }}</span>
+          </td>
+
+          <td class="date-val">{{ order.createdAt | date:'dd MMM yyyy' }}</td>
+
+          <td>
+            <select class="status-select" [ngClass]="getStatusClass(order.status)"
+              [(ngModel)]="order.status"
+              (ngModelChange)="updateStatus(order, $event)">
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

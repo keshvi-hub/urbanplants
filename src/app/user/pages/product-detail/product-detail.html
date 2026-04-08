@@ -1,0 +1,291 @@
+<!-- Floating Back -->
+<button class="float-back" (click)="goBack()" title="Go Back"><i class="fas fa-arrow-left"></i></button>
+<!-- Floating Go Top -->
+<button class="go-top" [class.visible]="showGoTop" (click)="scrollTop()" title="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Hero Banner -->
+<div class="page-banner">
+  <div class="container">
+    <h1><i class="fas fa-leaf"></i> Product Details</h1>
+    <p>Everything you need to know about this product</p>
+  </div>
+</div>
+
+<!-- Product Detail Page -->
+<section class="product-detail-section">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+      <a routerLink="/" class="breadcrumb-link">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <span class="breadcrumb-separator">/</span>
+      <a routerLink="/products" class="breadcrumb-link">Products</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">{{ product.name }}</span>
+    </nav>
+
+    <!-- Product Detail Content -->
+    <div class="product-detail-content" *ngIf="product">
+      <!-- Left Side - Image Gallery -->
+      <div class="product-gallery">
+        <!-- Main Image Display with Zoom -->
+        <div class="main-image-wrapper">
+
+          <!-- Video Player — rendered outside image container so controls work fully -->
+          <div class="video-player-wrapper" *ngIf="showVideo && product.video">
+            <video
+              class="product-video-main"
+              [src]="imageUrl + product.video"
+              controls
+              preload="metadata">
+            </video>
+          </div>
+
+          <!-- Image container (only when not showing video) -->
+          <div *ngIf="!showVideo"
+            class="main-image-container"
+            (mousemove)="onImageMouseMove($event)"
+            (mouseenter)="showZoom = true"
+            (mouseleave)="showZoom = false"
+            style="cursor:crosshair">
+
+            <img *ngIf="selectedImage"
+              [src]="imageUrl + selectedImage"
+              [alt]="product.name"
+              class="main-image">
+
+            <div class="no-image" *ngIf="!selectedImage">
+              <i class="fas fa-image"></i>
+              <p>No image available</p>
+            </div>
+            <div class="discount-badge" *ngIf="product.discount > 0">
+              {{ product.discount }}% OFF
+            </div>
+            <div class="zoom-lens" *ngIf="showZoom && selectedImage"
+              [style.left.px]="lensX"
+              [style.top.px]="lensY">
+            </div>
+          </div>
+
+          <!-- Zoomed image panel -->
+          <div class="zoom-panel" *ngIf="showZoom && selectedImage && !showVideo"
+            [style.backgroundImage]="'url(' + imageUrl + selectedImage + ')'"
+            [style.backgroundPosition]="zoomBgPos"
+            [style.backgroundSize]="zoomBgSize">
+          </div>
+        </div>
+
+        <!-- Thumbnails row — images + video at the end -->
+        <div class="thumbnail-container" *ngIf="productImages.length > 1 || (product.video && product.video !== '')">
+          <div
+            *ngFor="let image of productImages"
+            class="thumbnail-item"
+            [class.active]="selectedImage === image && !showVideo"
+            (click)="selectImage(image)">
+            <img [src]="imageUrl + image" [alt]="product.name">
+          </div>
+
+          <!-- Video thumbnail at the end -->
+          <div class="thumbnail-item thumbnail-video"
+            *ngIf="product.video && product.video !== ''"
+            [class.active]="showVideo"
+            (click)="selectVideo()"
+            title="Watch product video"
+            [style.backgroundImage]="productImages.length > 0 ? 'url(' + imageUrl + productImages[0] + ')' : 'none'">
+            <div class="video-thumb-overlay">
+              <div class="play-triangle"></div>
+              <span>Video</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Reviews Section Below Images -->
+        <div class="reviews-inline-section">
+          <div class="reviews-inline-header">
+            <h3 class="reviews-inline-title">
+              <i class="fas fa-star"></i> Reviews ({{ reviews.length }})
+            </h3>
+            <button class="btn-write-review-inline" (click)="toggleReviewForm()">
+              <i class="fas fa-pen"></i> Write
+            </button>
+          </div>
+
+          <!-- Rating Summary Inline -->
+          <div class="rating-summary-inline">
+            <div class="average-rating-inline">
+              <span class="rating-number-inline">{{ averageRating }}</span>
+              <div class="rating-stars-inline">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                   [class]="star <= averageRating ? 'fas fa-star' : 'far fa-star'"></i>
+              </div>
+            </div>
+            <div class="rating-bars-inline">
+              <div class="rating-bar-inline" *ngFor="let rating of [5,4,3,2,1]">
+                <span class="rating-num">{{ rating }}</span>
+                <div class="bar">
+                  <div class="bar-fill" [style.width.%]="getRatingPercentage(rating)"></div>
+                </div>
+                <span class="rating-count-inline">{{ getRatingCount(rating) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Write Review Form Inline -->
+          <div class="review-form-inline" *ngIf="showReviewForm">
+            <div class="form-group-inline">
+              <label>Rating</label>
+              <div class="star-rating-input-inline">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                   [class]="star <= newReview.rating ? 'fas fa-star' : 'far fa-star'"
+                   (click)="setRating(star)"></i>
+              </div>
+            </div>
+            <div class="form-group-inline">
+              <input 
+                type="text" 
+                [(ngModel)]="newReview.name"
+                placeholder="Your name"
+                class="form-input-inline">
+            </div>
+            <div class="form-group-inline">
+              <textarea 
+                [(ngModel)]="newReview.comment"
+                placeholder="Your review..."
+                rows="2"
+                class="form-textarea-inline"></textarea>
+            </div>
+            <div class="form-actions-inline">
+              <button class="btn-submit-inline" (click)="submitReview()">Submit</button>
+              <button class="btn-cancel-inline" (click)="cancelReview()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Recent Reviews Inline -->
+          <div class="reviews-list-inline">
+            <div class="review-item-inline" *ngFor="let review of reviews.slice(0, 2)">
+              <div class="review-header-inline">
+                <div class="reviewer-avatar-inline">{{ review.name.charAt(0).toUpperCase() }}</div>
+                <div class="reviewer-info-inline">
+                  <strong>{{ review.name }}</strong>
+                  <div class="review-stars-inline">
+                    <i *ngFor="let star of [1,2,3,4,5]" 
+                       [class]="star <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="review-text-inline">{{ review.comment }}</p>
+            </div>
+            <div class="no-reviews-inline" *ngIf="reviews.length === 0">
+              <p>No reviews yet. Be the first!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Product Info -->
+      <div class="product-info">
+        <!-- Category Badge -->
+        <div class="category-badge" *ngIf="product.categoryId">
+          <i class="fas fa-tag"></i> {{ product.categoryId.cat_name }}
+        </div>
+
+        <!-- Product Name -->
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <!-- Price Section -->
+        <div class="price-section">
+          <div class="price-wrapper">
+            <span class="current-price">₹{{ product.price }}</span>
+            <span class="original-price" *ngIf="product.oldprice && product.oldprice > product.price">
+              ₹{{ product.oldprice }}
+            </span>
+          </div>
+          <div class="savings" *ngIf="product.discount > 0">
+            You save ₹{{ product.oldprice - product.price }} ({{ product.discount }}%)
+          </div>
+          <div class="stock-status in-stock" *ngIf="product.stock == null || product.stock > 0">
+            <i class="fas fa-check-circle"></i> In Stock
+            <span class="stock-low" *ngIf="product.stock != null && product.stock <= 5 && product.stock > 0"> — Only {{ product.stock }} left!</span>
+          </div>
+          <div class="stock-status out-of-stock-label" *ngIf="product.stock != null && product.stock === 0">
+            <i class="fas fa-times-circle"></i> Out of Stock
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details-box">
+          <h3 class="section-heading">
+            <i class="fas fa-info-circle"></i> Product Details
+          </h3>
+          <div class="detail-row">
+            <span class="detail-label">Category:</span>
+            <span class="detail-value">{{ product.categoryId?.cat_name || 'N/A' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Price:</span>
+            <span class="detail-value">₹{{ product.price }}</span>
+          </div>
+          <div class="detail-row" *ngIf="product.oldprice && product.oldprice > product.price">
+            <span class="detail-label">Original Price:</span>
+            <span class="detail-value">₹{{ product.oldprice }}</span>
+          </div>
+          <div class="detail-row" *ngIf="product.discount > 0">
+            <span class="detail-label">Discount:</span>
+            <span class="detail-value">{{ product.discount }}%</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Available Images:</span>
+            <span class="detail-value">{{ productImages.length }}</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="product-description">
+          <h3 class="section-heading">
+            <i class="fas fa-align-left"></i> Description
+          </h3>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn-add-cart" (click)="addToCart()" [disabled]="product.stock != null && product.stock === 0" [class.btn-out-of-stock]="product.stock != null && product.stock === 0">
+            <i class="fas fa-shopping-cart"></i> {{ (product.stock != null && product.stock === 0) ? 'Out of Stock' : 'Add to Cart' }}
+          </button>
+          <button class="btn-wishlist" (click)="toggleWishlist()" [class.wishlisted]="isWishlisted" title="Add to Wishlist">
+            <i [class]="isWishlisted ? 'fas fa-heart' : 'far fa-heart'"></i>
+          </button>
+          <button class="btn-share">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="additional-info">
+          <div class="info-item">
+            <i class="fas fa-truck"></i>
+            <div>
+              <strong>Free Delivery</strong>
+              <p>On orders above ₹500</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-undo"></i>
+            <div>
+              <strong>Easy Returns</strong>
+              <p>7 days return policy</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <strong>Secure Payment</strong>
+              <p>100% secure transactions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,158 @@
+<div class="admin-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-plus-circle"></i>
+      <h2>Add Product</h2>
+    </div>
+    <a routerLink="/admin/products" class="btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+      Back
+    </a>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <form [formGroup]="frmGrp" (ngSubmit)="onsubmit()">
+      <div class="row g-4 mb-4">
+        <div class="col-md-7">
+          <label class="form-label">
+            <i class="fas fa-seedling me-2"></i>Product Name
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter product name"
+          />
+          <app-validation-message
+            [control]="frmGrp.get('name')"
+          ></app-validation-message>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">
+            <i class="fas fa-tags me-2"></i>Category
+          </label>
+          <select class="form-select" formControlName="categoryId">
+            <option value="">Select a category</option>
+            <option *ngFor="let c of categories" [value]="c._id">
+              {{ c.cat_name }}
+            </option>
+          </select>
+          <app-validation-message
+            [control]="frmGrp.get('categoryId')"
+          ></app-validation-message>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-align-left me-2"></i>Description
+        </label>
+        <textarea
+          class="form-control"
+          rows="4"
+          formControlName="description"
+          placeholder="Enter product description"
+        ></textarea>
+        <app-validation-message
+          [control]="frmGrp.get('description')"
+        ></app-validation-message>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-rupee-sign me-2"></i>Pricing Details
+        </label>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-sublabel">Current Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input type="number" step="0.01" min="0" class="form-control" formControlName="price" placeholder="0.00"/>
+            </div>
+            <app-validation-message [control]="frmGrp.get('price')"></app-validation-message>
+          </div>
+          <div class="col-md-3">
+            <label class="form-sublabel">Old Price</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input type="number" step="0.01" min="0" class="form-control" formControlName="oldprice" placeholder="0.00"/>
+            </div>
+            <app-validation-message [control]="frmGrp.get('oldprice')"></app-validation-message>
+          </div>
+          <div class="col-md-3">
+            <label class="form-sublabel">Discount (%)</label>
+            <div class="input-group">
+              <span class="input-group-text">%</span>
+              <input type="number" min="0" max="100" class="form-control" formControlName="discount" placeholder="0"/>
+            </div>
+            <app-validation-message [control]="frmGrp.get('discount')"></app-validation-message>
+          </div>
+          <div class="col-md-3">
+            <label class="form-sublabel">Stock Quantity</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-boxes"></i></span>
+              <input type="number" min="0" class="form-control" formControlName="stock" placeholder="0"/>
+            </div>
+            <app-validation-message [control]="frmGrp.get('stock')"></app-validation-message>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-images me-2"></i>Product Images
+        </label>
+        <input 
+          type="file" 
+          class="form-control" 
+          accept="image/*" 
+          multiple
+          (change)="onFileChange($event)">
+        <small class="form-text text-muted">Select multiple images (up to 5 images)</small>
+        <app-validation-message [control]="frmGrp.get('images')"></app-validation-message>
+        
+        <!-- Image Previews -->
+        <div class="image-preview-container" *ngIf="imagePreviews.length > 0">
+          <div class="image-preview-item" *ngFor="let preview of imagePreviews; let i = index">
+            <img [src]="preview" alt="Preview">
+            <button type="button" class="remove-image-btn" (click)="removeImage(i)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Upload -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="fas fa-video me-2"></i>Product Video <span class="text-muted" style="font-size:0.82rem;">(optional)</span>
+        </label>
+        <input
+          type="file"
+          class="form-control"
+          accept="video/mp4,video/webm,video/ogg,video/quicktime"
+          (change)="onVideoChange($event)">
+        <small class="form-text text-muted">Upload a product demo video (mp4, webm, mov — max 50MB)</small>
+
+        <!-- Video Preview -->
+        <div class="video-preview-container" *ngIf="videoPreviewUrl">
+          <video [src]="videoPreviewUrl" controls class="video-preview"></video>
+          <button type="button" class="remove-image-btn" (click)="removeVideo()" title="Remove video">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn-secondary">
+          <i class="fas fa-undo me-2"></i>Reset
+        </button>
+        <button type="submit" class="btn-add">
+          <i class="fas fa-plus-circle me-2"></i>Add Product
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

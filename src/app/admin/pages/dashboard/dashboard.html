@@ -1,0 +1,178 @@
+<div class="dash-page">
+
+  <!-- Welcome bar -->
+  <div class="dash-welcome">
+    <div>
+      <h2>Welcome back 👋</h2>
+      <p>Here's what's happening with your store today.</p>
+    </div>
+    <a routerLink="/admin/orders" class="dash-cta">
+      <i class="fas fa-clipboard-list"></i> View All Orders
+    </a>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stat-grid">
+    <div class="stat-card green">
+      <div class="stat-info">
+        <span class="stat-label">Total Products</span>
+        <span class="stat-value">{{ stats.totalProducts }}</span>
+      </div>
+      <div class="stat-icon"><i class="fas fa-seedling"></i></div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-info">
+        <span class="stat-label">Total Orders</span>
+        <span class="stat-value">{{ stats.totalOrders }}</span>
+      </div>
+      <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-info">
+        <span class="stat-label">Total Users</span>
+        <span class="stat-value">{{ stats.totalUsers }}</span>
+      </div>
+      <div class="stat-icon"><i class="fas fa-users"></i></div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-info">
+        <span class="stat-label">Total Revenue</span>
+        <span class="stat-value">₹{{ stats.revenue >= 1000 ? (stats.revenue/1000).toFixed(1)+'k' : stats.revenue }}</span>
+      </div>
+      <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+    </div>
+  </div>
+
+  <!-- Row 1: Orders per day + Status doughnut -->
+  <div class="charts-row">
+
+    <div class="chart-card wide">
+      <div class="card-head">
+        <h3><i class="fas fa-chart-line"></i> Orders & Sales — Last 7 Days</h3>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="ordersChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card narrow">
+      <div class="card-head">
+        <h3><i class="fas fa-chart-pie"></i> Order Status</h3>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Top products chart + Top products list -->
+  <div class="charts-row">
+
+    <div class="chart-card half">
+      <div class="card-head">
+        <h3><i class="fas fa-chart-bar"></i> Top 5 Products by Units Sold</h3>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="topProductsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card half">
+      <div class="card-head">
+        <h3><i class="fas fa-trophy"></i> Top Products</h3>
+      </div>
+      <div class="top-products-list">
+        <div class="tp-item" *ngFor="let p of topProducts; let i = index">
+          <div class="tp-rank" [ngClass]="'rank-'+i">{{ i+1 }}</div>
+          <img [src]="'http://localhost:3000/uploads/'+p.pic" class="tp-img">
+          <div class="tp-info">
+            <div class="tp-name">{{ p.name }}</div>
+            <div class="tp-meta">{{ p.qty }} units · ₹{{ p.revenue }}</div>
+          </div>
+          <div class="tp-bar-wrap">
+            <div class="tp-bar" [style.width.%]="topProducts[0]?.qty ? (p.qty/topProducts[0].qty)*100 : 0"></div>
+          </div>
+        </div>
+        <div *ngIf="!topProducts.length" class="empty-row">No sales data yet</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Orders -->
+  <div class="section-card">
+    <div class="card-head">
+      <h3><i class="fas fa-clock"></i> Recent Orders</h3>
+      <a routerLink="/admin/orders" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="table-wrap">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders; let i = index">
+            <td class="order-num">#{{ i+1 }}</td>
+            <td>
+              <div class="cust-name">{{ order.userId?.username || 'Unknown' }}</div>
+              <div class="cust-email">{{ order.userId?.email }}</div>
+            </td>
+            <td>
+              <div class="thumb-row">
+                <img *ngFor="let item of order.items | slice:0:2"
+                  [src]="'http://localhost:3000/uploads/'+$any(item).productId?.pic1" class="thumb-img">
+                <span class="thumb-more" *ngIf="order.items?.length > 2">+{{ order.items.length-2 }}</span>
+              </div>
+            </td>
+            <td class="order-total">₹{{ order.total || 0 }}</td>
+            <td><span class="pay-chip">{{ order.paymentMethod || 'COD' }}</span></td>
+            <td class="date-val">{{ order.createdAt | date:'dd MMM' }}</td>
+            <td>
+              <span class="status-chip" [ngClass]="getStatusClass(order.status)">
+                {{ order.status || 'Pending' }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="recentOrders.length === 0">
+            <td colspan="7" class="empty-row">No orders yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section-card">
+    <div class="card-head"><h3>Quick Actions</h3></div>
+    <div class="quick-links">
+      <a routerLink="/admin/products/add" class="ql-item">
+        <div class="ql-icon green"><i class="fas fa-plus"></i></div><span>Add Product</span>
+      </a>
+      <a routerLink="/admin/category/add" class="ql-item">
+        <div class="ql-icon blue"><i class="fas fa-tags"></i></div><span>Add Category</span>
+      </a>
+      <a routerLink="/admin/orders" class="ql-item">
+        <div class="ql-icon orange"><i class="fas fa-clipboard-list"></i></div><span>All Orders</span>
+      </a>
+      <a routerLink="/admin/showuser" class="ql-item">
+        <div class="ql-icon purple"><i class="fas fa-users"></i></div><span>All Users</span>
+      </a>
+      <a routerLink="/admin/products" class="ql-item">
+        <div class="ql-icon green"><i class="fas fa-seedling"></i></div><span>Products</span>
+      </a>
+      <a routerLink="/admin/settings" class="ql-item">
+        <div class="ql-icon blue"><i class="fas fa-cog"></i></div><span>Settings</span>
+      </a>
+    </div>
+  </div>
+
+</div>
